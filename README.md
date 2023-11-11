@@ -8,5 +8,5 @@ Submit bugs and feature requests for any of our plugins
 * External Images
 * Super Speedy Sitemaps
 * Super Speedy Slugs
-* Super Speedy Noticesx
+* Super Speedy Notices
 * Price Comparison Pro
