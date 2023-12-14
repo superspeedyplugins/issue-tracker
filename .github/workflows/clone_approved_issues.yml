@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Clone Issue
         run: 
-          new_issue_url=$(gh issue create --title "$TITLE" --label "$LABELS" --body "$BODY") 
+          new_issue_url=$(gh issue create --title "$TITLE" --body "$BODY") 
           gh issue comment "$ORIGINAL_NUMBER" --body "$new_issue_url"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -20,5 +20,4 @@ jobs:
           ORIGINAL_NUMBER: ${{ github.event.issue.number }}
           BODY: ${{ github.event.issue.body }}
           TITLE: ${{ github.event.issue.title }}
-          LABELS: ${{ github.event.issue.labels }}
           
