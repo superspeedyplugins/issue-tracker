@@ -18,34 +18,35 @@ jobs:
           PROJECT_ID=""
 
           # Super Speedy Filters keywords
-          if [[ "$CONTENT" =~ ssf|super speedy filters|super-speedy-filters ]]; then
+          if [[ "$CONTENT" =~ (ssf|super speedy filters|super-speedy-filters) ]]; then
             PROJECT_ID="6" # Replace with actual project ID
           fi
 
           # Super Speedy Search keywords
-          if [[ "$CONTENT" =~ sss|super speedy search|super-speedy-search ]]; then
+          if [[ "$CONTENT" =~ (sss|super speedy search|super-speedy-search) ]]; then
             PROJECT_ID="5" # Replace with actual project ID
           fi
 
           # Scalability Pro keywords
-          if [[ "$CONTENT" =~ spro|scalability pro|scalability-pro ]]; then
+          if [[ "$CONTENT" =~ (spro|scalability pro|scalability-pro) ]]; then
             PROJECT_ID="4" # Replace with actual project ID
           fi
 
           # External Images keywords
-          if [[ "$CONTENT" =~ ei|external images|external-images ]]; then
+          if [[ "$CONTENT" =~ (ei|external images|external-images) ]]; then
             PROJECT_ID="8" # Replace with actual project ID
           fi
 
           # Auto Infinite Scroll keywords
-          if [[ "$CONTENT" =~ ais|auto infinite scroll|auto-infinite-scroll ]]; then
+          if [[ "$CONTENT" =~ (ais|auto infinite scroll|auto-infinite-scroll) ]]; then
             PROJECT_ID="7" # Replace with actual project ID
           fi
 
           # Price Comparison Pro keywords
-          if [[ "$CONTENT" =~ pcpro|price comparison pro|price-comparison-pro ]]; then
+          if [[ "$CONTENT" =~ (pcpro|price comparison pro|price-comparison-pro) ]]; then
             PROJECT_ID="9" # Replace with actual project ID
           fi
+          
           if [ ! -z "$PROJECT_ID" ]; then
             # Use GitHub API to assign the issue/PR to the project
             # You'll need to replace this part with the appropriate API call
