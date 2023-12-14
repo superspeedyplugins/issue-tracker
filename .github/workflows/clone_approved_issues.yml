@@ -1,23 +1,17 @@
-name: Clone Issue
-on:
+name: Clone issue
+on: 
   issues:
-    types:
-      - labeled
+    types: [labeled]
+
 jobs:
-  add-comment:
+  clone_issue:
     if: github.event.label.name == 'approved'
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - name: Clone Issue
-        run: 
-          new_issue_url=$(gh issue create --title "$TITLE" --body "$BODY") 
-          gh issue comment "$ORIGINAL_NUMBER" --body "$new_issue_url"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run clone issue script
+        run: python scripts/clone_issue.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          ORIGINAL_NUMBER: ${{ github.event.issue.number }}
-          BODY: ${{ github.event.issue.body }}
-          TITLE: ${{ github.event.issue.title }}
-          
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
