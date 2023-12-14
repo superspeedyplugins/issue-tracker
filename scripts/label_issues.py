@@ -17,8 +17,11 @@ def label_issue(issue_number, title, body, token, plugins_str):
     # Determine the right label based on synonyms in ssp_plugins
     labels_to_add = []
     for label, details in ssp_plugins.items():
-        if any(synonym.lower() in content for synonym in details['synonyms']):
-            labels_to_add.append(label)
+        for synonym in details['synonyms']:
+            pattern = r'\b' + re.escape(synonym.lower()) + r'\b'  # Regular expression for whole word match
+            if re.search(pattern, content):
+                labels_to_add.append(label)
+                break  # Break the loop if a match is found
 
     if labels_to_add:
         # Add labels to the issue
