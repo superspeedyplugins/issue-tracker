@@ -28,11 +28,7 @@ def clone_issue(issue_number, token):
     body_with_comments += f"Sourced from public issue {issue_url}"
 
     destination_repo_name = get_first_project_repo(issue_number, headers)
-    if destination_repo_name:
-        destination_repo = f'superspeedyplugins/{destination_repo_name}'
-    else:
-        print("No project found for the issue")
-        # Handle the case where no project is found
+    destination_repo = f'superspeedyplugins/{destination_repo_name}'
 
     # Prepare data for the new issue
     new_issue_data = {
