@@ -10,6 +10,11 @@ jobs:
   assign-to-project:
     runs-on: ubuntu-latest
     steps:
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh
+
       - name: Check for Keywords and Assign Project
         run: |
           TITLE=$(echo '${{ github.event.issue.title }}' | tr '[:upper:]' '[:lower:]')
@@ -47,11 +52,10 @@ jobs:
             PROJECT_ID="9" # Replace with actual project ID
           fi
           
-          if [ ! -z "$PROJECT_ID" ]; then
-            # Use GitHub API to assign the issue/PR to the project
-            # You'll need to replace this part with the appropriate API call
-            # and provide a token with the necessary permissions
+           if [ ! -z "$PROJECT_ID" ]; then
             echo "Assigning to Project ID: $PROJECT_ID"
+            # Example gh CLI command to add an issue to a project
+            gh api projects/columns/{column_id}/cards -f content_id=${{ github.event.issue.number }} -f content_type=Issue
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
