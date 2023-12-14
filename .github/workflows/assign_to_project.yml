@@ -1,0 +1,56 @@
+name: Assign to Specific Projects
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Keywords and Assign Project
+        run: |
+          TITLE=$(echo '${{ github.event.issue.title }}' | tr '[:upper:]' '[:lower:]')
+          BODY=$(echo '${{ github.event.issue.body }}' | tr '[:upper:]' '[:lower:]')
+          CONTENT="$TITLE $BODY"
+          PROJECT_ID=""
+
+          # Super Speedy Filters keywords
+          if [[ "$CONTENT" =~ ssf|super speedy filters|super-speedy-filters ]]; then
+            PROJECT_ID="6" # Replace with actual project ID
+          fi
+
+          # Super Speedy Search keywords
+          if [[ "$CONTENT" =~ sss|super speedy search|super-speedy-search ]]; then
+            PROJECT_ID="5" # Replace with actual project ID
+          fi
+
+          # Scalability Pro keywords
+          if [[ "$CONTENT" =~ spro|scalability pro|scalability-pro ]]; then
+            PROJECT_ID="4" # Replace with actual project ID
+          fi
+
+          # External Images keywords
+          if [[ "$CONTENT" =~ ei|external images|external-images ]]; then
+            PROJECT_ID="8" # Replace with actual project ID
+          fi
+
+          # Auto Infinite Scroll keywords
+          if [[ "$CONTENT" =~ ais|auto infinite scroll|auto-infinite-scroll ]]; then
+            PROJECT_ID="7" # Replace with actual project ID
+          fi
+
+          # Price Comparison Pro keywords
+          if [[ "$CONTENT" =~ pcpro|price comparison pro|price-comparison-pro ]]; then
+            PROJECT_ID="9" # Replace with actual project ID
+          fi
+          if [ ! -z "$PROJECT_ID" ]; then
+            # Use GitHub API to assign the issue/PR to the project
+            # You'll need to replace this part with the appropriate API call
+            # and provide a token with the necessary permissions
+            echo "Assigning to Project ID: $PROJECT_ID"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
