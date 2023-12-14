@@ -14,7 +14,8 @@ def clone_issue(issue_number, token):
     issue_url = f'https://api.github.com/repos/{source_repo}/issues/{issue_number}'
     response = requests.get(issue_url, headers=headers)
     issue_data = response.json()
-
+    
+    print(issue_data)
     # Fetch comments from the source issue
     comments_url = issue_data['comments_url']
     comments_response = requests.get(comments_url, headers=headers)
@@ -73,8 +74,8 @@ def get_matching_repo_slug(issue_labels, plugins):
     return None
     
 # Environment variables
-issue_number = 3  # This should be passed from the workflow
-token = "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"  # Your GitHub token
+issue_number = os.getenv('ISSUE_NUMBER')  # This should be passed from the workflow
+token = os.getenv('GITHUB_TOKEN')  # Your GitHub token
 
 # Clone the issue
 clone_issue(issue_number, token)
