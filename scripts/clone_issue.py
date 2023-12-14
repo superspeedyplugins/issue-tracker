@@ -50,18 +50,9 @@ def clone_issue(issue_number, token):
 
         if create_response.status_code == 201:
             print("Issue cloned successfully")
-            new_issue_data = create_response.json()
-            new_issue_url = new_issue_data['html_url']
-
-            # Construct the comment
-            comment_text = f"This issue has been cloned to our private repo: {new_issue_url}"
-
-            # Post the comment to the original issue
-            comment_url = f'https://api.github.com/repos/{source_repo}/issues/{issue_number}/comments'
-            comment_data = {'body': comment_text}
-            comment_response = requests.post(comment_url, headers=headers, data=json.dumps(comment_data))
         else:
             print("Failed to clone issue")
+            
     else:
         print("No matching repo found")        
 
