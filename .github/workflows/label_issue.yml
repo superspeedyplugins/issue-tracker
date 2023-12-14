@@ -11,9 +11,10 @@ jobs:
       - name: Label Issue
         uses: actions/checkout@v2
       - name: Run Labeling Script
-        run: python ./label_issues.py
+        run: python scripts/label_issues.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          GITHUB_TOKEN: ${{ secrets.SSP_ACTION_TOKEN }}
+          SSP_PLUGINS: ${{ secrets.SSP_PLUGINS }}
