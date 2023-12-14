@@ -1,61 +1,56 @@
-name: Assign to Specific Projects
+import os
+import json
+import requests
 
-on:
-  issues:
-    types: [opened]
-  pull_request:
-    types: [opened]
+def add_issue_to_project(issue_number, content, token):
+    headers = {
+        'Authorization': f'token {token}',
+        'Accept': 'application/vnd.github.v3+json'
+    }
 
-jobs:
-  assign-to-project:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install GitHub CLI
-        run: |
-          sudo apt update
-          sudo apt install gh
+    # Mapping keywords to project column IDs
+    keyword_to_column_id = {
+        'ssf|super speedy filters|super-speedy-filters': 'COLUMN_ID_FOR_SSF',
+        'sss|super speedy search|super-speedy-search': 'COLUMN_ID_FOR_SSS',
+        # Add more mappings as needed
+    }
 
-      - name: Check for Keywords and Assign Project
-        run: |
-          TITLE=$(echo '${{ github.event.issue.title }}' | tr '[:upper:]' '[:lower:]')
-          BODY=$(echo '${{ github.event.issue.body }}' | tr '[:upper:]' '[:lower:]')
-          CONTENT="$TITLE $BODY"
-          PROJECT_ID=""
+    # Determine the right column based on keywords
+    column_id = None
+    for keywords, column_id_value in keyword_to_column_id.items():
+        if any(keyword in content.lower() for keyword in keywords.split('|')):
+            column_id = column_id_value
+            break
 
-          # Super Speedy Filters keywords
-          if [[ "$CONTENT" =~ (ssf|super speedy filters|super-speedy-filters) ]]; then
-            PROJECT_ID="6" # Replace with actual project ID
-          fi
+    if column_id:
+        # Construct the URL for the GitHub API to add an issue to a project column
+        url = f'https://api.github.com/projects/columns/{column_id}/cards'
 
-          # Super Speedy Search keywords
-          if [[ "$CONTENT" =~ (sss|super speedy search|super-speedy-search) ]]; then
-            PROJECT_ID="5" # Replace with actual project ID
-          fi
+        # Prepare the data payload. The content_id is the issue number
+        data = {
+            'content_id': issue_number,
+            'content_type': 'Issue'
+        }
 
-          # Scalability Pro keywords
-          if [[ "$CONTENT" =~ (spro|scalability pro|scalability-pro) ]]; then
-            PROJECT_ID="4" # Replace with actual project ID
-          fi
+        # Make the API request to add the issue to the project column
+        response = requests.post(url, headers=headers, data=json.dumps(data))
 
-          # External Images keywords
-          if [[ "$CONTENT" =~ (ei|external images|external-images) ]]; then
-            PROJECT_ID="8" # Replace with actual project ID
-          fi
+        # Check the response
+        if response.status_code == 201:
+            print("Issue added to project successfully")
+        else:
+            print(f"Failed to add issue to project: {response.content}")
+    else:
+        print("No matching keywords found for project assignment.")
 
-          # Auto Infinite Scroll keywords
-          if [[ "$CONTENT" =~ (ais|auto infinite scroll|auto-infinite-scroll) ]]; then
-            PROJECT_ID="7" # Replace with actual project ID
-          fi
+# Environment variables
+issue_number = int(os.getenv('ISSUE_NUMBER'))  # This should be passed from the workflow
+issue_title = os.getenv('ISSUE_TITLE')
+issue_body = os.getenv('ISSUE_BODY')
+token = os.getenv('GITHUB_TOKEN')  # Your GitHub token
 
-          # Price Comparison Pro keywords
-          if [[ "$CONTENT" =~ (pcpro|price comparison pro|price-comparison-pro) ]]; then
-            PROJECT_ID="9" # Replace with actual project ID
-          fi
-          
-           if [ ! -z "$PROJECT_ID" ]; then
-            echo "Assigning to Project ID: $PROJECT_ID"
-            # Example gh CLI command to add an issue to a project
-            gh api projects/columns/{column_id}/cards -f content_id=${{ github.event.issue.number }} -f content_type=Issue
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Combine title and body for keyword search
+content = f"{issue_title} {issue_body}"
+
+# Add the issue to the project
+add_issue_to_project(issue_number, content, token)
