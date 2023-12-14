@@ -17,4 +17,4 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           GITHUB_TOKEN: ${{ secrets.SSP_ACTION_TOKEN }}
-          SSP_PLUGINS: ${{ secrets.SSP_PLUGINS }}
+          SSP_PLUGINS: ${{ vars.SSP_PLUGINS }}
