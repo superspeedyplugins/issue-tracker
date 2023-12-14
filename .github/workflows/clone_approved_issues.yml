@@ -15,4 +15,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.SSP_ACTION_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          SSP_PLUGINS: ${{ secrets.SSP_PLUGINS }}
+          SSP_PLUGINS: ${{ vars.SSP_PLUGINS }}
