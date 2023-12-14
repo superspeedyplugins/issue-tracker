@@ -1,0 +1,24 @@
+name: Clone Issue
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Clone Issue
+        run: 
+          new_issue_url=$(gh issue create --title "$TITLE" --label "$LABELS" --body "$BODY") 
+          gh issue comment "$ORIGINAL_NUMBER" --body "$new_issue_url"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ORIGINAL_NUMBER: ${{ github.event.issue.number }}
+          BODY: ${{ github.event.issue.body }}
+          TITLE: ${{ github.event.issue.title }}
+          LABELS: ${{ github.event.issue.labels }}
+          
