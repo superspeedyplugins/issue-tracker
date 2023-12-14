@@ -2,30 +2,22 @@ import os
 import json
 import requests
 
-def label_issue(issue_number, title, body, token):
+def label_issue(issue_number, title, body, token, plugins_str):
     headers = {
         'Authorization': f'token {token}',
         'Accept': 'application/vnd.github.v3+json'
     }
 
+    # Load plugins data
+    ssp_plugins = json.loads(plugins_str)
+
     # Combine title and body for keyword search
     content = f"{title} {body}".lower()
 
-    # Define keywords and corresponding labels
-    keywords_to_labels = {
-        'ssf|super speedy filters|super-speedy-filters': 'Super Speedy Filters',
-        'sss|super speedy search|super-speedy-search': 'Super Speedy Search',
-        'spro|scalability pro|scalability-pro': 'Scalability Pro',
-        'ei|external images|external-images': 'External Images',
-        'ais|auto infinite scroll|auto-infinite-scroll': 'Auto Infinite Scroll',
-        'pcpro|price comparison pro|price-comparison-pro': 'Price Comparison Pro',
-        # Add more mappings as needed
-    }
-
-    # Determine the right label based on keywords
+    # Determine the right label based on synonyms in ssp_plugins
     labels_to_add = []
-    for keywords, label in keywords_to_labels.items():
-        if any(keyword in content for keyword in keywords.split('|')):
+    for label, details in ssp_plugins.items():
+        if any(synonym.lower() in content for synonym in details['synonyms']):
             labels_to_add.append(label)
 
     if labels_to_add:
@@ -46,6 +38,7 @@ issue_number = os.getenv('ISSUE_NUMBER')
 issue_title = os.getenv('ISSUE_TITLE')
 issue_body = os.getenv('ISSUE_BODY')
 token = os.getenv('GITHUB_TOKEN')
+ssp_plugins_str = os.getenv('SSP_PLUGINS')
 
 # Label the issue
-label_issue(issue_number, issue_title, issue_body, token)
+label_issue(issue_number, issue_title, issue_body, token, ssp_plugins_str)
