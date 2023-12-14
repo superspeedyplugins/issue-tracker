@@ -13,5 +13,5 @@ jobs:
       - name: Run clone issue script
         run: python scripts/clone_issue.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SSP_ACTION_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
