@@ -13,8 +13,12 @@ def label_issue(issue_number, title, body, token):
 
     # Define keywords and corresponding labels
     keywords_to_labels = {
-        'ssf|super speedy filters|super-speedy-filters': 'SSF Label',
-        'sss|super speedy search|super-speedy-search': 'SSS Label',
+        'ssf|super speedy filters|super-speedy-filters': 'Super Speedy Filters',
+        'sss|super speedy search|super-speedy-search': 'Super Speedy Search',
+        'spro|scalability pro|scalability-pro': 'Scalability Pro',
+        'ei|external images|external-images': 'External Images',
+        'ais|auto infinite scroll|auto-infinite-scroll': 'Auto Infinite Scroll',
+        'pcpro|price comparison pro|price-comparison-pro': 'Price Comparison Pro',
         # Add more mappings as needed
     }
 
