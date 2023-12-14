@@ -26,7 +26,7 @@ def label_issue(issue_number, title, body, token):
 
     if labels_to_add:
         # Add labels to the issue
-        url = f'https://api.github.com/repos/Glynnage/REPO_NAME/issues/{issue_number}/labels'
+        url = f'https://api.github.com/repos/superspeedyplugins/issue-tracker/issues/{issue_number}/labels'
         data = {'labels': labels_to_add}
         response = requests.post(url, headers=headers, json=data)
 
