@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import re
 
 def label_issue(issue_number, title, body, token, plugins_str):
     headers = {
