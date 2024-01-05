@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import re
+# import re required for regex
 
 def label_issue(issue_number, title, body, token, plugins_str):
     headers = {
