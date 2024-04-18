@@ -23,7 +23,7 @@ jobs:
             **${{ github.event.issue.title || github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
             ${{ github.event.issue.html_url || github.event.pull_request.html_url || github.event.comment.html_url }}
-            ((Description/Comment:** ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
+            **((Description/Comment:** ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
 
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
