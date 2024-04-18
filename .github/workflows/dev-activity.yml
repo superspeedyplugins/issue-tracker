@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Notification to Discord
-        uses: Ilshidur/action-discord@v2
+        uses: Ilshidur/action-discord@0.3.2
         with:
           args: "${{ github.actor }} just ${ github.event.action } on ${{ github.event.issue.pull_request.html_url || github.event.pull_request.html_url || github.event.comment.html_url }} - Comment/Description: ${{ github.event.comment.body || github.event.issue.title || github.event.pull_request.title }}"
         env:
