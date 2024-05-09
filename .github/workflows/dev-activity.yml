@@ -27,3 +27,68 @@ jobs:
 
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  notify_review_requested:
+    if: github.event_name == 'pull_request' && github.event.action == 'review_requested'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Review Requested Notification
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Review Requested:** ${{ github.event.pull_request.title }}
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            [Review Requested by](${github.event.requested_reviewer.html_url})
+            ${{ github.event.pull_request.html_url }}
+            **Description:** ${{ github.event.pull_request.body }}
+
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  notify_review_completed:
+    if: github.event_name == 'pull_request_review' && github.event.action == 'submitted'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Review Completed Notification
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Review Completed:** ${{ github.event.pull_request.title }}
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            ${{ github.event.pull_request.html_url }}
+            **Review Comment:** ${{ github.event.review.body }}
+
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  notify_changes_requested:
+    if: github.event_name == 'pull_request_review' && github.event.review.state == 'changes_requested'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Changes Requested Notification
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Changes Requested:** ${{ github.event.pull_request.title }}
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            ${{ github.event.pull_request.html_url }}
+            **Requested Changes:** ${{ github.event.review.body }}
+
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  notify_changes_completed:
+    if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Changes Completed Notification
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Changes Completed (Approved):** ${{ github.event.pull_request.title }}
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            ${{ github.event.pull_request.html_url }}
+            **Approval Comment:** ${{ github.event.review.body }}
+
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
