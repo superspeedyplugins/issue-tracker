@@ -1,3 +1,11 @@
+---
+name: Feature Request
+about: Use this template for requesting a new feature
+title: "Add [FEATURE NAME] for [PLUGIN NAME]"
+labels: feature request
+assignees: 
+---
+
 1. Name your feature request clearly including the plugin name.
 2. Describe what extra feature you would like
 3. Tell us whether you are willing to sponsor development of this feature, and if so, complete this form: https://docs.google.com/forms/u/1/d/e/1FAIpQLSdeeKaTJIA5WgqF4X-9LsoGqSgyx1xeD_tABhiR86C7SwvOYQ/viewform?usp=sf_link&pli=1
