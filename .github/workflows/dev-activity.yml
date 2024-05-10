@@ -20,75 +20,109 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
+            **Event Type: ${{
+              github.event_name == 'issues' && github.event.action == 'opened' && 'Issue Opened' ||
+              github.event_name == 'issues' && github.event.action == 'edited' && 'Issue Edited' ||
+              github.event_name == 'issues' && github.event.action == 'closed' && 'Issue Closed' ||
+              github.event_name == 'issue_comment' && github.event.action == 'created' && 'Issue Comment Created' ||
+              github.event_name == 'pull_request' && github.event.action == 'opened' && 'Pull Request Opened' ||
+              github.event_name == 'pull_request' && github.event.action == 'closed' && 'Pull Request Closed' ||
+              github.event_name == 'pull_request' && github.event.action == 'reopened' && 'Pull Request Reopened' ||
+              github.event_name == 'pull_request_review' && github.event.action == 'submitted' && 'Pull Request Review Submitted' ||
+              github.event_name == 'pull_request_review' && github.event.action == 'edited' && 'Pull Request Review Edited' ||
+              github.event_name == 'pull_request_review' && github.event.action == 'dismissed' && 'Pull Request Review Dismissed' ||
+              github.event_name == 'pull_request_review_comment' && github.event.action == 'created' && 'Pull Request Review Comment Created' ||
+              github.event_name == 'pull_request_review_comment' && github.event.action == 'edited' && 'Pull Request Review Comment Edited' ||
+              github.event_name == 'pull_request_review_comment' && github.event.action == 'deleted' && 'Pull Request Review Comment Deleted'
+            }}**
             **${{ github.event.issue.title || github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
             ${{ github.event.issue.html_url || github.event.pull_request.html_url || github.event.comment.html_url }}
             **Description/Comment:** ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
-
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
-  notify_review_requested:
-    if: github.event_name == 'pull_request' && github.event.action == 'review_requested'
+  notify_glyn_pull_request:
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
     runs-on: ubuntu-latest
     steps:
-      - name: Send Review Requested Notification
+      - name: Send Pull Request Notification to Glyn
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
-            **Review Requested:** ${{ github.event.pull_request.title }}
+            **Event Type: ${{
+              github.event.action == 'opened' && 'Pull Request Opened' ||
+              github.event.action == 'reopened' && 'Pull Request Reopened'
+            }}**
+            **${{ github.event.pull_request.title }}**
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            ${{ github.event.pull_request.html_url }}
+            **Description:** ${{ github.event.pull_request.body }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.GLYN_DISCORD_WEBHOOK }}
+
+  notify_glyn_review_requested:
+    if: github.event_name == 'pull_request' && github.event.action == 'review_requested'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Review Requested Notification to Glyn
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Event Type: Review Requested**
+            **${{ github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
             [Review Requested by](${github.event.requested_reviewer.html_url})
             ${{ github.event.pull_request.html_url }}
             **Description:** ${{ github.event.pull_request.body }}
-
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.GLYN_DISCORD_WEBHOOK }}
 
-  notify_review_completed:
-    if: github.event_name == 'pull_request_review' && github.event.action == 'submitted'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Review Completed Notification
-        uses: Ilshidur/action-discord@0.3.2
-        with:
-          args: |
-            **Review Completed:** ${{ github.event.pull_request.title }}
-            [@${{ github.actor }}](https://github.com/${{ github.actor }})
-            ${{ github.event.pull_request.html_url }}
-            **Review Comment:** ${{ github.event.review.body }}
-
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
-  notify_changes_requested:
+  notify_glyn_changes_requested:
     if: github.event_name == 'pull_request_review' && github.event.review.state == 'changes_requested'
     runs-on: ubuntu-latest
     steps:
-      - name: Send Changes Requested Notification
+      - name: Send Changes Requested Notification to Glyn
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
-            **Changes Requested:** ${{ github.event.pull_request.title }}
+            **Event Type: Changes Requested**
+            **${{ github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
             ${{ github.event.pull_request.html_url }}
-            **Requested Changes:** ${{ github.event.review.body }}
-
+            **Review Comment:** ${{ github.event.review.body }}
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.GLYN_DISCORD_WEBHOOK }}
 
-  notify_changes_completed:
-    if: github.event_name == 'pull_request_review' && github.event.review.state == 'approved'
+  notify_dave_review_completed:
+    if: github.event_name == 'pull_request_review' && (github.event.review.state == 'approved' || github.event.review.state == 'commented')
     runs-on: ubuntu-latest
     steps:
-      - name: Send Changes Completed Notification
+      - name: Send Review Completed Notification to Dave
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: |
-            **Changes Completed (Approved):** ${{ github.event.pull_request.title }}
+            **Event Type: Review Completed**
+            **${{ github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
             ${{ github.event.pull_request.html_url }}
-            **Approval Comment:** ${{ github.event.review.body }}
-
+            **Review Comment:** ${{ github.event.review.body }}
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DAVE_DISCORD_WEBHOOK }}
+
+  notify_glyn_and_dave_merge:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Merge Notification to Glyn and Dave
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            **Event Type: Merged Pull Request**
+            **${{ github.event.pull_request.title }}**
+            [@${{ github.actor }}](https://github.com/${{ github.actor }})
+            ${{ github.event.pull_request.html_url }}
+            **Description:** ${{ github.event.pull_request.body }}
+        env:
+          GLYN_DISCORD_WEBHOOK: ${{ secrets.GLYN_DISCORD_WEBHOOK }}
+          DAVE_DISCORD_WEBHOOK: ${{ secrets.DAVE_DISCORD_WEBHOOK }}
