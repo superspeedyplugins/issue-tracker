@@ -42,10 +42,11 @@ jobs:
             }}**
             **${{ github.event.ref_name || github.event.issue.title || github.event.pull_request.title }}**
             [@${{ github.actor }}](https://github.com/${{ github.actor }})
-            ${{ github.event.ref_type == 'branch' && ('https://github.com/' + github.repository + '/tree/' + github.ref_name) || github.event.issue.html_url || github.event.pull_request.html_url || github.event.comment.html_url }}
+            ${{ github.event.ref_type == 'branch' && format('https://github.com/{0}/tree/{1}', github.repository, github.ref_name) || github.event.issue.html_url || github.event.pull_request.html_url || github.event.comment.html_url }}
             **Description/Comment:** ${{ github.event.comment.body || github.event.issue.body || github.event.pull_request.body }}
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
 
   notify_glyn_pull_request:
     if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'reopened')
